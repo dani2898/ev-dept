@@ -41,8 +41,13 @@ class LoginController extends Controller
 
     public function logout()
     {
-       Auth::logout();
+        Auth::logout();
 
         return redirect()->route('login');
+    }
+
+    public function username()
+    {
+        return 'username'; //or return the field which you want to use.
     }
 }
