@@ -15,7 +15,11 @@ class TemasTableSeeder extends Seeder
     public function run()
     {
         $arrayTemas = array(
-            array("Tema 2",  2, "SCD-1011")
+            array("Tema 1",  1, "SCD-1011"),
+            array("Tema 2",  2, "SCD-1011"),
+            array("Tema 1",  1, "SCA-1025"),
+            array("Tema 2",  2, "SCA-1025"),
+            
         );
 
         foreach ($arrayTemas as $elementTema) {

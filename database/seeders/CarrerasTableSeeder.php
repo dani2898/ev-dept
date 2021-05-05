@@ -16,7 +16,9 @@ class CarrerasTableSeeder extends Seeder
     {
         $carrerasArray = array(
             array("ITIC-2010-224", "Ingeniería en Tecnología y Comunicación"),
-            array("IIF-2010-224", "Ingeniería Informática")
+            array("IIF-2010-224", "Ingeniería Informática"),
+            array("ISIC-2010-224", "Ingeniería Informática")
+            
 
         );
 

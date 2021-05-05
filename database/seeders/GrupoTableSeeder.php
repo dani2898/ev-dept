@@ -16,10 +16,10 @@ class GrupoTableSeeder extends Seeder
     {
         //
         $grupoArray = array(
-            array("A", "SCA-1025", 2),
-            array("B", "SCA-1025", 3),
-            array("A", "SCD-1011", 2),
-            array("B", "SCD-1011", 2)
+            array("A", "SCA-1025", 1),
+            array("B", "SCA-1025", 2),
+            array("A", "SCD-1011", 1),
+            array("B", "SCD-1011", 1)
         );
 
         foreach ($grupoArray as $grupoElement) {

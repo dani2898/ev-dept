@@ -19,7 +19,12 @@ class SubtemasTableSeeder extends Seeder
             array("Subtema 2",  2, "1"),
             array("Subtema 1",  1, "2"),
             array("Subtema 2",  2, "2"),
-            array("Subtema 3",  3, "2")
+            array("Subtema 3",  3, "2"),
+            array("Subtema 1",  1, "3"),
+            array("Subtema 2",  2, "3"),
+            array("Subtema 3",  1, "3"),
+            array("Subtema 1",  2, "4"),
+            array("Subtema 2",  3, "4")
             
         );
 
