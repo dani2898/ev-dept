@@ -10,9 +10,9 @@
             <div class="col-lg-12">
 
 
-                <a href="{{route('bancoPreguntas', ['mat_ev_id' => $mat_ev_id])}}"><button class="btn btn-info btn-raised btn-sm float-end mx-3">
+                <!-- <a href="{{route('bancoPreguntas', ['mat_ev_id' => $mat_ev_id])}}"><button class="btn btn-info btn-raised btn-sm float-end mx-3">
                     Banco de preguntas
-                </button></a>
+                </button></a> -->
 
                 <button class="btn btn-primary btn-raised btn-sm float-end" id="myBtn">
                     Nuevo reactivo
