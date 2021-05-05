@@ -17,11 +17,14 @@ class RolUserTableSeeder extends Seeder
         //
         $array = array(
             array(1, 1),
-            array(2, 2),
+            array(3, 2),
             array(3, 3),
             array(3, 4),
-            array(4, 5),
-            array(4, 6)
+            array(3, 5),
+            array(4, 6),
+            array(4, 7),
+            array(4, 8),
+            array(4, 9),
         );
 
         foreach ($array as $element) {

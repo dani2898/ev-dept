@@ -31,14 +31,6 @@ class UserTableSeeder extends Seeder
         $user->roles()->attach($rol_jefe_docencia);
 
         $user = new User();
-        $user->name = 'Jessica Villa';
-        $user->email = 'jess@gmail.com';
-        $user->password = bcrypt('12345678');
-        $user->username = 'SS0001';
-        $user->save();
-        $user->roles()->attach($rol_servidor_social);
-
-        $user = new User();
         $user->name = 'Ireri Rojas';
         $user->email = 'ireri@gmail.com';
         $user->password = bcrypt('12345678');
@@ -51,6 +43,22 @@ class UserTableSeeder extends Seeder
         $user->email = 'miguel@gmail.com';
         $user->password = bcrypt('12345678');
         $user->username = 'D00002';
+        $user->save();
+        $user->roles()->attach($rol_docente);
+
+        $user = new User();
+        $user->name = 'Rogelio Ferreira';
+        $user->email = 'rogelio@gmail.com';
+        $user->password = bcrypt('12345678');
+        $user->username = 'D00003';
+        $user->save();
+        $user->roles()->attach($rol_docente);
+
+        $user = new User();
+        $user->name = 'Javier Ballesteros';
+        $user->email = 'javier@gmail.com';
+        $user->password = bcrypt('12345678');
+        $user->username = 'D00004';
         $user->save();
         $user->roles()->attach($rol_docente);
         
@@ -67,6 +75,22 @@ class UserTableSeeder extends Seeder
         $user->email = 'isacc@gmail.com';
         $user->password = bcrypt('12345678');
         $user->username = 'A00002';
+        $user->save();
+        $user->roles()->attach($rol_alumno);
+
+        $user = new User();
+        $user->name = 'Abril Bárcenas';
+        $user->email = 'abril@gmail.com';
+        $user->password = bcrypt('12345678');
+        $user->username = 'A00003';
+        $user->save();
+        $user->roles()->attach($rol_alumno);
+
+        $user = new User();
+        $user->name = 'Jessica Villa';
+        $user->email = 'jessica@gmail.com';
+        $user->password = bcrypt('12345678');
+        $user->username = 'A00004';
         $user->save();
         $user->roles()->attach($rol_alumno);
     }

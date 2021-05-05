@@ -15,7 +15,7 @@ class DocentesTableSeeder extends Seeder
      */
     public function run()
     {
-        $array = array(3, 4);
+        $array = array(2, 3, 4, 5);
 
         foreach ($array as $element) {
             $docente = new Docente();
