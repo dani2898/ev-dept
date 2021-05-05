@@ -11,7 +11,7 @@ class Materia extends Model
     public $timestamps = false;
     protected $table = 'materias';
     protected $fillable = ['claveMat', 'nombre', 'idSemestre', 'claveCarrera'];
-    // public $primaryKey = 'claveMat';
+    public $primaryKey = 'claveMat';
 
     public function grupos()
     {
