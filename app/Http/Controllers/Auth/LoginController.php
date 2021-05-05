@@ -46,6 +46,7 @@ class LoginController extends Controller
         return redirect()->route('login');
     }
 
+    
     public function username()
     {
         return 'username'; //or return the field which you want to use.
