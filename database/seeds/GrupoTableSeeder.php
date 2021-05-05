@@ -15,9 +15,6 @@ class GrupoTableSeeder extends Seeder
     public function run()
     {
         //
-
-        1,2, 3,4
-
         $grupoArray = array(
             1array("A", "A1L2", 1),
             2array("B", "A1L2", 2),
