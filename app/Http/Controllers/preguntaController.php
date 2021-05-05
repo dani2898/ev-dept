@@ -281,7 +281,7 @@ class preguntaController extends Controller
 
         $tiposPregunta = TipoPregunta::all();
 
-        return view("roles.Docente.bancoPreguntas", compact(
+        return view("roles.docente.bancoPreguntas", compact(
             "preguntasMateria",
             "mat_ev_id",
             'tiposPregunta',
