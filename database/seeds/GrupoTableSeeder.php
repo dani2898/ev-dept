@@ -15,11 +15,24 @@ class GrupoTableSeeder extends Seeder
     public function run()
     {
         //
+
+        1,2, 3,4
+
         $grupoArray = array(
-            array("A", "SCA-1025", 1),
-            array("B", "SCA-1025", 2),
-            array("A", "SCD-1011", 1),
-            array("B", "SCD-1011", 1)
+            1array("A", "A1L2", 1),
+            2array("B", "A1L2", 2),
+            3array("A", "A2LA", 3),
+            4array("A", "A3L2", 3),
+            5array("B", "A3L2", 4),
+            6array("A", "A4L3", 1),
+            7array("A", "A5L3", 2),
+            8array("B", "A5L3", 3),
+            9array("A", "A6L5", 3),
+            10array("A", "ACA-0909", 4),
+            11array("B", "ACA-0909", 1),
+            12array("A", "A8L2", 2),
+            13array("A", "A9L1", 3),
+            14array("B", "A9L1", 4),
         );
 
         foreach ($grupoArray as $grupoElement) {
