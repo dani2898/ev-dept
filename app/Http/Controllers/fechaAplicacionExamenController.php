@@ -75,19 +75,19 @@ class fechaAplicacionExamenController extends Controller
 
         foreach($gruposDocente as $grupoDocente){
             $consultaFecha = FechaAplicacionExamen::where('idMatEv', $idMateriaEvaluacion)->where('idGrupo', $grupoDocente->id);
-           if($consultaFecha->first()){
+        //    if($consultaFecha->first()){
           $grupoDocente->fechaAplicacion = $consultaFecha->first()->fechaAplicacion;
-           }
-           else{
-            $fechaAplicacionInicio = evaluacionDepartamental::where('id', $idEvaluacion)->first()->aplicacionInicio;
-            $fechaAplicacionFin = evaluacionDepartamental::where('id', $idEvaluacion)->first()->aplicacionFin;
-            return view("roles.docente.asignarFechaExamen", compact(
-                "gruposDocente",
-                'idMateriaEvaluacion',
-                'fechaAplicacionInicio',
-                'fechaAplicacionFin'
-            ));
-           }
+        //    }
+        //    else{
+        //     $fechaAplicacionInicio = evaluacionDepartamental::where('id', $idEvaluacion)->first()->aplicacionInicio;
+        //     $fechaAplicacionFin = evaluacionDepartamental::where('id', $idEvaluacion)->first()->aplicacionFin;
+        //     return view("roles.docente.asignarFechaExamen", compact(
+        //         "gruposDocente",
+        //         'idMateriaEvaluacion',
+        //         'fechaAplicacionInicio',
+        //         'fechaAplicacionFin'
+        //     ));
+        //    }
             $grupoDocente->idFechaAplicacion = FechaAplicacionExamen::where('idMatEv', $idMateriaEvaluacion)->where('idGrupo', $grupoDocente->id)->first()->id;
         }
 
