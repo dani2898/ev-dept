@@ -138,6 +138,7 @@ class materia_evaluacion extends Controller
             $materia->cantPreguntas = $preguntaConteo;
         }
 
+        echo $materiasEvaluacionDocente; exit;
         return view("roles.docente.listadoMaterias", compact("materiasEvaluacionDocente"));
     }
 
