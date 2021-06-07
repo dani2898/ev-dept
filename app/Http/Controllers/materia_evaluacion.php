@@ -48,7 +48,7 @@ class materia_evaluacion extends Controller
         $materias = $request->materias;
 
 
-        if(isset($materias)){
+        if (isset($materias)) {
             foreach ($materias as $materia) {
                 $materiaEvaluacion = new ModelsMateria_Evaluacion();
                 $materiaEvaluacion->claveMat = $materia;
@@ -56,7 +56,7 @@ class materia_evaluacion extends Controller
                 $materiaEvaluacion->save();
             }
         }
-        
+
         return redirect()->route('listadoEvaluaciones');
     }
 
@@ -76,13 +76,13 @@ class materia_evaluacion extends Controller
             ->orderBy('materias.claveMat', 'asc')
             ->get();
         $arrayNoPreguntas = [];
-        
+
         foreach ($materias as $materia) {
             $preguntasMateria = Pregunta::where('mat_ev_id', $materia->idMateriaEvaluacion)->where('habilitada', true)->get();
             $preguntaConteo = $preguntasMateria->count();
             $materia->cantPreguntas = $preguntaConteo;
-            $docentesId= Grupo::where('claveMateria', $materia->claveMat)->pluck('idDocente');
-            $idUsuario = Docente::whereIn('id', $docentesId)->pluck('idUsuario'); 
+            $docentesId = Grupo::where('claveMateria', $materia->claveMat)->pluck('idDocente');
+            $idUsuario = Docente::whereIn('id', $docentesId)->pluck('idUsuario');
             $materia->nombreDocentes = User::whereIn('id', $idUsuario)->pluck('name');
             $materia->opcionMultiple = Pregunta::where('mat_ev_id', $materia->idMateriaEvaluacion)->where('idTipoPregunta', 1)->where('habilitada', true)->get()->count();
             $materia->verdaderoFalso = Pregunta::where('mat_ev_id', $materia->idMateriaEvaluacion)->where('idTipoPregunta', 2)->where('habilitada', true)->get()->count();
@@ -90,10 +90,10 @@ class materia_evaluacion extends Controller
 
             $examen = Examen::where('mat_ev_id', $materia->idMateriaEvaluacion)->get()->count();
 
-            if($examen>0) $materia->examen = true;
+            if ($examen > 0) $materia->examen = true;
             else   $materia->examen = false;
         }
-// echo $materias; exit;
+        // echo $materias; exit;
         return view("roles.jefeDocencia.materiasCaptura", compact("materias", 'idEvaluacion'));
     }
 
@@ -129,11 +129,11 @@ class materia_evaluacion extends Controller
             ->where('materia_evaluacion.idEvaluacion', '=', $idEvaluacion)
             ->whereIn('materia_evaluacion.claveMat',  $arrayMaterias)
             ->get();
-        foreach($materiasEvaluacionDocente as $materia){
-        $gruposDocente = Grupo::where('claveMateria', ($materia->claveMat))->where('idDocente', $idDocente->id)->orderBy('grupo', 'asc')->get();
-        $grupos = $gruposDocente->pluck('id');
-        $materia->fechaAplicacionFlag = FechaAplicacionExamen::whereIn('idGrupo', $grupos)->get();
-        $preguntasMateria = Pregunta::where('mat_ev_id', $materia->idMateriaEvaluacion)->where('habilitada', true)->get();
+        foreach ($materiasEvaluacionDocente as $materia) {
+            $gruposDocente = Grupo::where('claveMateria', ($materia->claveMat))->where('idDocente', $idDocente->id)->orderBy('grupo', 'asc')->get();
+            $grupos = $gruposDocente->pluck('id');
+            $materia->fechaAplicacionFlag = FechaAplicacionExamen::whereIn('idGrupo', $grupos)->where('idMatEv', $materia->idMateriaEvaluacion)->get();
+            $preguntasMateria = Pregunta::where('mat_ev_id', $materia->idMateriaEvaluacion)->where('habilitada', true)->get();
             $preguntaConteo = $preguntasMateria->count();
             $materia->cantPreguntas = $preguntaConteo;
         }
@@ -172,10 +172,9 @@ class materia_evaluacion extends Controller
      */
     public function destroy($idMateriaEvaluacion, $idEvaluacion)
     {
-        
+
         $deletedRows = ModelsMateria_Evaluacion::where('id', $idMateriaEvaluacion)->delete();
 
-        return redirect()->route('materiasEnCaptura' , $idEvaluacion);
-
+        return redirect()->route('materiasEnCaptura', $idEvaluacion);
     }
 }
