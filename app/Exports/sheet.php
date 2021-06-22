@@ -12,6 +12,7 @@ use App\Models\materia_Evaluacion;
 use App\Models\Pregunta;
 use App\Models\ResultadoExamen;
 use App\Models\User;
+use GrahamCampbell\ResultType\Result;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -123,13 +124,13 @@ class sheet implements FromCollection, WithTitle, WithHeadings
                         $arrayPreguntas = array_map('intval', explode(',', $idPreguntas));
 
                         $cantPreguntasCognoscitivo = Pregunta::whereIn('id', $arrayPreguntas)->where('idDominio', 1)->get()->count();
-                        $cantPreguntasPsicomotor = Pregunta::whereIn('id', $arrayPreguntas)->where('idDominio',2)->get()->count();
+                        $cantPreguntasPsicomotor = Pregunta::whereIn('id', $arrayPreguntas)->where('idDominio', 2)->get()->count();
                         $cantPreguntasAfectivo = Pregunta::whereIn('id', $arrayPreguntas)->where('idDominio', 3)->get()->count();
 
                         $cantidadAlumnosMateria = ResultadoExamen::where('claveMat', $materia->claveMat)->get()->count();
-                        if($cantPreguntasCognoscitivo!=0)$materia->promedioCognoscitivo = strval(intval((((ResultadoExamen::where('claveMat', $materia->claveMat)->sum('dominioCogniscitivo'))/$cantidadAlumnosMateria)*100)/$cantPreguntasCognoscitivo));
-                        if($cantPreguntasPsicomotor!=0)$materia->promedioPsicomotor = strval(intval((((ResultadoExamen::where('claveMat', $materia->claveMat)->sum('dominioPsicomotor'))/$cantidadAlumnosMateria)*100)/$cantPreguntasPsicomotor));
-                        if($cantPreguntasAfectivo!=0)$materia->promedioAfectivo = strval(intval((((ResultadoExamen::where('claveMat', $materia->claveMat)->sum('dominioAfectivo'))/$cantidadAlumnosMateria)*100)/$cantPreguntasAfectivo));
+                        if ($cantPreguntasCognoscitivo != 0) $materia->promedioCognoscitivo = strval(intval((((ResultadoExamen::where('claveMat', $materia->claveMat)->sum('dominioCogniscitivo')) / $cantidadAlumnosMateria) * 100) / $cantPreguntasCognoscitivo));
+                        if ($cantPreguntasPsicomotor != 0) $materia->promedioPsicomotor = strval(intval((((ResultadoExamen::where('claveMat', $materia->claveMat)->sum('dominioPsicomotor')) / $cantidadAlumnosMateria) * 100) / $cantPreguntasPsicomotor));
+                        if ($cantPreguntasAfectivo != 0) $materia->promedioAfectivo = strval(intval((((ResultadoExamen::where('claveMat', $materia->claveMat)->sum('dominioAfectivo')) / $cantidadAlumnosMateria) * 100) / $cantPreguntasAfectivo));
                     }
                 }
                 $subset = $materias->map->only([
@@ -140,6 +141,26 @@ class sheet implements FromCollection, WithTitle, WithHeadings
                 return $subset->sortBy('materia');
 
                 break;
+
+                case "DEPARTAMENTAL":
+                    $evaluacionDepartamental = evaluacionDepartamental::where('id',$this->idEvaluacion)->get();
+                    foreach($evaluacionDepartamental as $evDept){
+                        $noAlumnos=$evDept->noAlumnos = ResultadoExamen::get()->count();
+                        if($noAlumnos!=0){
+                        $evDept->promedio = intval(ResultadoExamen::sum('calificacion')/ResultadoExamen::get()->count());
+                        $noAprobados=$evDept->aprobados = ResultadoExamen::where('aprobado',1)->get()->count();
+                        $evDept->indAprobacion = intval(($noAprobados*100)/$noAlumnos);
+                        $noReprobados=$evDept->reprobados = ResultadoExamen::where('aprobado',0)->get()->count();
+                        $evDept->indReprobacion = intval(($noReprobados*100)/$noAlumnos);
+                    }
+                    }
+                    $subset = $evaluacionDepartamental->map->only([
+                        'noAlumnos', 'promedio', 'aprobados', 'indAprobacion',
+                        'reprobados','indReprobacion'
+                    ]);
+                    return $subset;
+    
+                    break;
 
             case "SOBRESALIENTES":
                 $materias = materia_Evaluacion::with('materias:claveMat,nombre')->where('idEvaluacion', $this->idEvaluacion)->get();
@@ -236,6 +257,17 @@ class sheet implements FromCollection, WithTitle, WithHeadings
                     'DOM COGNOSCITIVO',
                     'DOM PSICOMOTOR',
                     'DOM AFECTIVO'
+                ];
+                break;
+
+            case "DEPARTAMENTAL":
+                return [
+                    'ALUMNOS',
+                    'PROMEDIO',
+                    'APROBADOS',
+                    'IND APROBACION',
+                    'REPROBADOS',
+                    'IND REPROBACION'
                 ];
                 break;
 
