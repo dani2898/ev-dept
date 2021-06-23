@@ -120,7 +120,8 @@ class sheet implements FromCollection, WithTitle, WithHeadings
                         $materia->reprobados =  strval(ResultadoExamen::where('claveMat', $materia->claveMat)->where('aprobado', 0)->get()->count());
                         $materia->indReprobacion =  strval(intval(($materia->reprobados * 100) / $materia->alumnos));
                         $preguntas = Examen::where('mat_ev_id', $materia->id)->first();
-                        $idPreguntas =  substr($preguntas->preguntas, 1);
+                      if($preguntas!=null){ 
+                       $idPreguntas =  substr($preguntas->preguntas, 1);
                         $arrayPreguntas = array_map('intval', explode(',', $idPreguntas));
 
                         $cantPreguntasCognoscitivo = Pregunta::whereIn('id', $arrayPreguntas)->where('idDominio', 1)->get()->count();
@@ -132,6 +133,7 @@ class sheet implements FromCollection, WithTitle, WithHeadings
                         if ($cantPreguntasPsicomotor != 0) $materia->promedioPsicomotor = strval(intval((((ResultadoExamen::where('claveMat', $materia->claveMat)->sum('dominioPsicomotor')) / $cantidadAlumnosMateria) * 100) / $cantPreguntasPsicomotor));
                         if ($cantPreguntasAfectivo != 0) $materia->promedioAfectivo = strval(intval((((ResultadoExamen::where('claveMat', $materia->claveMat)->sum('dominioAfectivo')) / $cantidadAlumnosMateria) * 100) / $cantPreguntasAfectivo));
                     }
+                }
                 }
                 $subset = $materias->map->only([
                     'materia', 'alumnos', 'promedio', 'aprobados',
