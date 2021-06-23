@@ -64,13 +64,13 @@ class examenController extends Controller
         foreach ($preguntas as $pregunta) {
             $arrayPreguntasId[] = $pregunta->id;
         }
-        if(isset($arrayPreguntasId)){
+        if (isset($arrayPreguntasId)) {
             $examen = new Examen;
             $examen->preguntas = json_encode($arrayPreguntasId);
             $examen->mat_ev_id = $idMateriaEvaluacion;
             $examen->save();
         }
-        
+
 
         return redirect()->route('materiasEnCaptura', $idEvaluacion);
     }
@@ -87,11 +87,13 @@ class examenController extends Controller
 
         $gruposAlumno = AlumnoGrupo::where('idAlumno', $idAlumno)->get()->pluck('idGrupo');
 
+        $examenAplicadoGrupo = ResultadoExamen::where('idAlumno', $idAlumno)->get()->pluck('idGrupo');
+        $gruposAlumno = AlumnoGrupo::where('idAlumno', $idAlumno)->whereNotIn('idGrupo', $examenAplicadoGrupo)->get()->pluck('idGrupo');
         $fechaActual = Carbon::now()->toDateString();
-        $gruposAlumno = FechaAplicacionExamen::whereIn('idGrupo', $gruposAlumno)->where('fechaAplicacion', $fechaActual)->get()->pluck('idGrupo');
+        $gruposAlumno = FechaAplicacionExamen::whereIn('idGrupo', $gruposAlumno)->where('fechaAplicacion', $fechaActual)->get()->sortBy('idGrupo')->pluck('idGrupo');
 
 
-        $alumnoGrupo = AlumnoGrupo::where('idAlumno', $idAlumno)->get()->pluck('id'); 
+        $alumnoGrupo = AlumnoGrupo::where('idAlumno', $idAlumno)->get()->pluck('id');
         $examenesResueltos = ResultadoExamen::where([['idAlumno', $idAlumno], ['idEvaluacion', $idEvaluacion]])->get()->pluck('claveMat');
         $consultaGrupo = Grupo::whereIn('id', $gruposAlumno)->whereNotIn('claveMateria', $examenesResueltos)->get();
         $materias = $consultaGrupo->pluck('claveMateria');
@@ -103,12 +105,14 @@ class examenController extends Controller
             ->select('materia_evaluacion.id', 'materias.claveMat', 'materias.nombre')
             ->where('materia_evaluacion.idEvaluacion', '=', $idEvaluacion)
             ->whereIn('materia_evaluacion.claveMat',  $materias)
-            ->get();
+            ->get()->sortBy('id');
         $id = 0;
         foreach ($materiaDatos as $materia) {
             $materia->idGrupo = $gruposAlumno[$id];
             $id++;
         }
+
+
 
         return view("roles.alumno.listadoExamenes", compact("materiaDatos", 'idEvaluacion'));
     }
@@ -272,7 +276,7 @@ class examenController extends Controller
 
         $calificacion = $this->generarCalificacion($respuestasCorrectas, $totalPreguntas);
         $aprueba = $this->apruebaExamen($calificacion);
-        
+
 
         $resultadoExamen = new ResultadoExamen();
         $resultadoExamen->respuestasAlumno = json_encode($arrayRespuestasGeneral);

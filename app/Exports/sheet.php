@@ -78,12 +78,12 @@ class sheet implements FromCollection, WithTitle, WithHeadings
                     $group->docente = $usuario->name;
                     $group->materia = $gruposMateria[$var];
                     $group->carrera = $gruposCarrera[$var];
-                    $totalAlumnos = $group->noAlumnos = strval(ResultadoExamen::where('idGrupo', $idGrupos[$var])->get()->count());
+                    $totalAlumnos = $group->noAlumnos = strval(ResultadoExamen::where('idGrupo', $idGrupos[$var])->where('idEvaluacion', $this->idEvaluacion)->get()->count());
                     if ($group->noAlumnos != 0) {
-                        $group->promedio = strval((ResultadoExamen::where('idGrupo', $idGrupos[$var])->sum('calificacion')) / $group->noAlumnos);
-                        $aprobados = $group->aprobados = strval(ResultadoExamen::where('idGrupo', $idGrupos[$var])->where('aprobado', 1)->get()->count());
+                        $group->promedio = strval((ResultadoExamen::where('idGrupo', $idGrupos[$var])->where('idEvaluacion', $this->idEvaluacion)->sum('calificacion')) / $group->noAlumnos);
+                        $aprobados = $group->aprobados = strval(ResultadoExamen::where('idGrupo', $idGrupos[$var])->where('idEvaluacion', $this->idEvaluacion)->where('aprobado', 1)->get()->count());
                         $group->indAprobacion = strval(($aprobados * 100) / $totalAlumnos);
-                        $reprobados = $group->reprobados = strval(ResultadoExamen::where('idGrupo', $idGrupos[$var])->where('aprobado', 0)->get()->count());
+                        $reprobados = $group->reprobados = strval(ResultadoExamen::where('idGrupo', $idGrupos[$var])->where('idEvaluacion', $this->idEvaluacion)->where('aprobado', 0)->get()->count());
                         $group->indReprobacion = strval(($reprobados * 100) / $totalAlumnos);
                     } else {
                         $group->promedio = "0";
@@ -112,12 +112,13 @@ class sheet implements FromCollection, WithTitle, WithHeadings
                     $materia->materia = $nombreMaterias[$var++];
                 }
                 foreach ($materias as $materia) {
-                    if (ResultadoExamen::where('claveMat', $materia->claveMat)->get()->count() > 0) {
-                        $materia->alumnos = ResultadoExamen::where('claveMat', $materia->claveMat)->get()->count();
-                        $materia->promedio =  strval(intval(ResultadoExamen::where('claveMat', $materia->claveMat)->sum('calificacion') / $materia->alumnos));
-                        $materia->aprobados =  strval(ResultadoExamen::where('claveMat', $materia->claveMat)->where('aprobado', 1)->get()->count());
+                    if (ResultadoExamen::where('claveMat', $materia->claveMat)->where('idEvaluacion', $this->idEvaluacion)->get()->count() > 0) {
+
+                       $materia->alumnos = ResultadoExamen::where('claveMat', $materia->claveMat)->where('idEvaluacion', $this->idEvaluacion)->get()->count();
+                        $materia->promedio =  strval(intval(ResultadoExamen::where('claveMat', $materia->claveMat)->where('idEvaluacion', $this->idEvaluacion)->sum('calificacion') / $materia->alumnos));
+                        $materia->aprobados =  strval(ResultadoExamen::where('claveMat', $materia->claveMat)->where('idEvaluacion', $this->idEvaluacion)->where('aprobado', 1)->get()->count());
                         $materia->indAprobacion =  strval(intval(($materia->aprobados * 100) / $materia->alumnos));
-                        $materia->reprobados =  strval(ResultadoExamen::where('claveMat', $materia->claveMat)->where('aprobado', 0)->get()->count());
+                        $materia->reprobados =  strval(ResultadoExamen::where('claveMat', $materia->claveMat)->where('idEvaluacion', $this->idEvaluacion)->where('aprobado', 0)->get()->count());
                         $materia->indReprobacion =  strval(intval(($materia->reprobados * 100) / $materia->alumnos));
                         $preguntas = Examen::where('mat_ev_id', $materia->id)->first();
                       if($preguntas!=null){ 
@@ -128,10 +129,10 @@ class sheet implements FromCollection, WithTitle, WithHeadings
                         $cantPreguntasPsicomotor = Pregunta::whereIn('id', $arrayPreguntas)->where('idDominio', 2)->get()->count();
                         $cantPreguntasAfectivo = Pregunta::whereIn('id', $arrayPreguntas)->where('idDominio', 3)->get()->count();
 
-                        $cantidadAlumnosMateria = ResultadoExamen::where('claveMat', $materia->claveMat)->get()->count();
-                        if ($cantPreguntasCognoscitivo != 0) $materia->promedioCognoscitivo = strval(intval((((ResultadoExamen::where('claveMat', $materia->claveMat)->sum('dominioCogniscitivo')) / $cantidadAlumnosMateria) * 100) / $cantPreguntasCognoscitivo));
-                        if ($cantPreguntasPsicomotor != 0) $materia->promedioPsicomotor = strval(intval((((ResultadoExamen::where('claveMat', $materia->claveMat)->sum('dominioPsicomotor')) / $cantidadAlumnosMateria) * 100) / $cantPreguntasPsicomotor));
-                        if ($cantPreguntasAfectivo != 0) $materia->promedioAfectivo = strval(intval((((ResultadoExamen::where('claveMat', $materia->claveMat)->sum('dominioAfectivo')) / $cantidadAlumnosMateria) * 100) / $cantPreguntasAfectivo));
+                        $cantidadAlumnosMateria = ResultadoExamen::where('claveMat', $materia->claveMat)->where('idEvaluacion', $this->idEvaluacion)->get()->count();
+                        if ($cantPreguntasCognoscitivo != 0) $materia->promedioCognoscitivo = strval(intval((((ResultadoExamen::where('claveMat', $materia->claveMat)->where('idEvaluacion', $this->idEvaluacion)->sum('dominioCogniscitivo')) / $cantidadAlumnosMateria) * 100) / $cantPreguntasCognoscitivo));
+                        if ($cantPreguntasPsicomotor != 0) $materia->promedioPsicomotor = strval(intval((((ResultadoExamen::where('claveMat', $materia->claveMat)->where('idEvaluacion', $this->idEvaluacion)->sum('dominioPsicomotor')) / $cantidadAlumnosMateria) * 100) / $cantPreguntasPsicomotor));
+                        if ($cantPreguntasAfectivo != 0) $materia->promedioAfectivo = strval(intval((((ResultadoExamen::where('claveMat', $materia->claveMat)->where('idEvaluacion', $this->idEvaluacion)->sum('dominioAfectivo')) / $cantidadAlumnosMateria) * 100) / $cantPreguntasAfectivo));
                     }
                 }
                 }
@@ -147,12 +148,12 @@ class sheet implements FromCollection, WithTitle, WithHeadings
                 case "DEPARTAMENTAL":
                     $evaluacionDepartamental = evaluacionDepartamental::where('id',$this->idEvaluacion)->get();
                     foreach($evaluacionDepartamental as $evDept){
-                        $noAlumnos=$evDept->noAlumnos = ResultadoExamen::get()->count();
+                        $noAlumnos=$evDept->noAlumnos = ResultadoExamen::where('idEvaluacion', $this->idEvaluacion)->get()->count();
                         if($noAlumnos!=0){
-                        $evDept->promedio = intval(ResultadoExamen::sum('calificacion')/ResultadoExamen::get()->count());
-                        $noAprobados=$evDept->aprobados = ResultadoExamen::where('aprobado',1)->get()->count();
+                        $evDept->promedio = intval(ResultadoExamen::where('idEvaluacion', $this->idEvaluacion)->sum('calificacion')/ResultadoExamen::where('idEvaluacion', $this->idEvaluacion)->get()->count());
+                        $noAprobados=$evDept->aprobados = ResultadoExamen::where('aprobado',1)->where('idEvaluacion', $this->idEvaluacion)->get()->count();
                         $evDept->indAprobacion = intval(($noAprobados*100)/$noAlumnos);
-                        $noReprobados=$evDept->reprobados = ResultadoExamen::where('aprobado',0)->get()->count();
+                        $noReprobados=$evDept->reprobados = ResultadoExamen::where('aprobado',0)->where('idEvaluacion', $this->idEvaluacion)->get()->count();
                         $evDept->indReprobacion = intval(($noReprobados*100)/$noAlumnos);
                     }
                     }
@@ -169,7 +170,7 @@ class sheet implements FromCollection, WithTitle, WithHeadings
                 $nombreMaterias = $materias->pluck('materias.nombre');
                 $claveMat = $materias->pluck('claveMat');
 
-                $sobresalientes = ResultadoExamen::with('materias:claveMat,nombre', 'alumno:id,name')->whereIn('claveMat', $claveMat)
+                $sobresalientes = ResultadoExamen::with('materias:claveMat,nombre', 'alumno:id,name')->where('idEvaluacion', $this->idEvaluacion)->whereIn('claveMat', $claveMat)
                     ->where('calificacion', '>=', '90')->where('calificacion', '<', '100')->get();
                 $materias = $sobresalientes->pluck('materias.nombre');
                 $alumnos = $sobresalientes->pluck('alumno.name');
@@ -192,7 +193,7 @@ class sheet implements FromCollection, WithTitle, WithHeadings
                 $nombreMaterias = $materias->pluck('materias.nombre');
                 $claveMat = $materias->pluck('claveMat');
 
-                $sobresalientes = ResultadoExamen::with('materias:claveMat,nombre', 'alumno:id,name')->whereIn('claveMat', $claveMat)->where('calificacion', '100')->get();
+                $sobresalientes = ResultadoExamen::with('materias:claveMat,nombre', 'alumno:id,name')->where('idEvaluacion', $this->idEvaluacion)->whereIn('claveMat', $claveMat)->where('calificacion', '100')->get();
                 $materias = $sobresalientes->pluck('materias.nombre');
                 $alumnos = $sobresalientes->pluck('alumno.name');
                 $var = 0;

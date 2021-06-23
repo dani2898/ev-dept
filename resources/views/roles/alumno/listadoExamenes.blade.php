@@ -17,6 +17,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                    
                         @foreach ($materiaDatos as $materia)
                         <tr>
                             <td>{{$materia->claveMat}} </td>

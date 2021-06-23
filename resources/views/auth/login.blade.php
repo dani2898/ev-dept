@@ -48,7 +48,7 @@
                             <p class="text-center">Bienvenido al Sistema de Evaluaciones Departamentales, por favor ingrese usuario y contraseña para acceder.</p>
                             <br>
                             <ul class="nav nav-pills nav-center">
-                                <li role="presentation"><a href="https://morelia.tecsge.com/login">Iniciar sesión </a> </li> </ul> <br>
+                                <li role="presentation"><a href="#">Iniciar sesión </a> </li> </ul> <br>
                                                     <div class="row">
                                                         <div class="col-sm-10 col-sm-offset-1">
                                                             <div class="form-group label-floating">
